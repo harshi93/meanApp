@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines":{
+    "node":"6.10.x",
+    "npm":"3.10.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/harshi93/meanApp.git"
@@ -17,7 +21,13 @@
   },
   "homepage": "https://github.com/harshi93/meanApp#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
+    "bower": "^1.8.0",
     "express": "^4.15.3",
-    "nodemon": "^1.11.0"
+    "jade": "^1.11.0",
+    "mongoose": "^4.10.5",
+    "morgan": "^1.8.2",
+    "nodemon": "^1.11.0",
+    "stylus": "^0.54.5"
   }
 }

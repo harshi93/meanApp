@@ -1,10 +1,56 @@
-var express = require('express');
+var express = require('express'),
+    stylus = require('stylus'),
+    logger = require('morgan'),
+    bodyParser = require('body-parser'),
+    mongoose = require('mongoose');
+
+var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 var app = express();
 
-app.get('/', function(req, res){
-    res.send('Hello World');
+function compile(str, path) {
+    return stylus(str).set('filename', path);
+}
+
+app.set('views', __dirname + '/server/views');
+app.set('view engine', 'jade');
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(stylus.middleware(
+    {
+        src: __dirname + '/public',
+        compile: compile
+    }
+));
+app.use(express.static(__dirname + '/public'));
+
+if (env === 'development') {
+    mongoose.connect('mongodb://localhost/multivision');
+} else {
+    momgoose.connect('mongodb://harshi93:Shubhra1967@ds123752.mlab.com:23752/meanapp')
+}
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error'));
+db.once('open', function callback() {
+    console.log('multivision db opened');
+});
+var messageSchema = mongoose.Schema({ message: String });
+var Message = mongoose.model('Message', messageSchema);
+var mongoMessage;
+Message.findOne().exec(function (err, messageDoc) {
+    mongoMessage = messageDoc.message;
+});
+app.get('/partials/:partialPath', function (req, res) {
+    res.render('partials/' + req.params.partialPath);
 });
 
-app.listen(process.env.PORT || 8080, function(){
-    console.log('Running the server');
+app.get('*', function (req, res) {
+    res.render('index', {
+        mongoMessage: mongoMessage
+    });
 });
+
+var port = process.env.PORT || 3030;
+app.listen(port);
+console.log('Listening on port' + port + '...');
